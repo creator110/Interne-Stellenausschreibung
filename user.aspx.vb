@@ -4,12 +4,13 @@ Imports System.Data.OleDb
 Imports System.Data.Sql
 Imports System.Data.SqlClient
 Imports System.Web.Services.Description
+Imports WebApplication1.connectionString
 
 
-Public Class user
+Public Class intern
     Inherits System.Web.UI.Page
 
-    Const strConnectionString = "Provider=XXXXX;Server=XXXXX;Database=XXXXX;User Id=XXXXX;Password=XXXXX;"
+    Const strConnectionString = connection
 
     Dim strSQL As String
     Dim dtList As DataTable = New DataTable
