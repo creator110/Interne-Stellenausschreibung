@@ -71,16 +71,23 @@ Public Class intern
         Dim tmpDisp As String
 
         For Each item As String In IO.Directory.GetFiles("x:\Stellen")
-            If IO.Path.GetExtension(item) = ".doc" Then
-                tmpDoc = IO.Path.GetFileName(item)
-                tmpDisp = IO.Path.GetFileName(item)
-
-                strSQL = "IF NOT EXISTS (SELECT * FROM Stellen WHERE docname = '" & tmpDoc & "')" & _
-                    "INSERT INTO Stellen (docname, displayname, author, oeffentlich, mVerbergen)" & _
-                    "VALUES ('" & tmpDoc & "', '" & tmpDisp & "', 'author', 'verbergen', 'anzeigen')"
-
-                UpdateSQL()
-
+            
+            REM schreibt Dokumente die mit einem Unterstrich beginnen NICHT in die Datenbank
+            If Left(IO.Path.GetFileName(item), 1) = "_" Then
+            
+            Else
+            
+                If IO.Path.GetExtension(item) = ".doc" Then
+                    tmpDoc = IO.Path.GetFileName(item)
+                    tmpDisp = IO.Path.GetFileName(item)
+    
+                    strSQL = "IF NOT EXISTS (SELECT * FROM Stellen WHERE docname = '" & tmpDoc & "')" & _
+                        "INSERT INTO Stellen (docname, displayname, author, oeffentlich, mVerbergen)" & _
+                        "VALUES ('" & tmpDoc & "', '" & tmpDisp & "', 'author', 'verbergen', 'anzeigen')"
+    
+                    UpdateSQL()
+                    
+                End If
             End If
         Next
     End Sub
@@ -133,6 +140,12 @@ Public Class intern
                 UpdateSQL()
 
             Case "loeschen"
+                REM setzt einen Unterstrich vor die Datei aus dem Ordner
+                My.Computer.FileSystem.RenameFile(pfad + doc, "_" + doc)
+                
+                REM Dokument loeschen
+                'My.Computer.FileSystem.DeleteFile(doc)
+                
                 REM loescht den eintrag aus der Datenbank
                 strSQL = "DELETE FROM Stellen WHERE ID = " & id & " "
                 UpdateSQL()
