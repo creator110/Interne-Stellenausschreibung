@@ -16,6 +16,7 @@ Public Class intern
     Dim dtList As DataTable = New DataTable
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+        lesen()
         readDirAndWrite()
         lesen()
     End Sub
@@ -182,6 +183,16 @@ Public Class intern
 
         If e.Row.RowType = DataControlRowType.DataRow Then
 
+            REM wenn die Datei zu dem Eintrag nicht mehr vorhanden ist, 
+            REM wird der Eintrag aus der Datenbank geloescht
+            Try
+                If Not (File.Exists(pfad + doc.Text)) Then
+                    strSQL = "DELETE FROM Stellen WHERE ID = " & id & " "
+                End If
+            Catch ex As Exception
+                MsgBox("Fehler!", "Datei existiert nicht mehr!")
+            End Try
+            
             REM erstellt Textboxen fuer die Spalte "displayname"
             Dim TB_displayname = New TextBox
             TB_displayname.Style.Add("width", "120px")
